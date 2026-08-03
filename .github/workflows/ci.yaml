@@ -27,7 +27,7 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes auto-allocate-uids configurable-impure-env local-overlay-store
             max-jobs = auto
-            max-silient-time = 1800
+            max-silent-time = 1800
             cores = 1
             require-sigs = true
             sandbox = false
@@ -42,6 +42,6 @@ jobs:
             download-buffer-size = 500000000
             trusted-substituters = https://cache.nixos.org/
       - name: Install devenv
-        run: nix profile install github:cachix/devenv?ref=v2.2.1&dir=src/modules
+        run: nix profile add "github:cachix/devenv?ref=v2.2" --accept-flake-config --option extra-substituters "https://devenv.cachix.org?trusted=true&priority=3"
       - name: Run devenv shell
-        run: devenv shell --command "nix flake show"
+        run: devenv shell -- terraform version
