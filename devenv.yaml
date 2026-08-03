@@ -1,0 +1,11 @@
+impure: true
+inputs:
+  devenv:
+    url: github:/cachix/devenv?ref=v2.2.1&dir=src/modules
+  nixpkgs: 
+    url: https://releases.nixos.org/nixos/26.05/nixos-26.05.5591.fd1462031fde/nixexprs.tar.xz
+  nixpkgs-terraform:
+    url: github:stackbuilders/nixpkgs-terraform?ref=v5.22.1
+    inputs:
+      nixpkgs:
+        follows: nixpkgs

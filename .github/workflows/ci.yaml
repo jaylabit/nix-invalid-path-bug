@@ -1,0 +1,47 @@
+name: Test nix setup and debug
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  debug:
+    name: Debug nix setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          filter: tree:0
+          show-progress: false
+          ref: main 
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          install_url: https://releases.nixos.org/nix/nix-2.35.1/install
+          nix_path: nixpkgs=https://releases.nixos.org/nixos/26.05/nixos-26.05.5591.fd1462031fde/nixexprs.tar.xz
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          install_options: --no-daemon
+          extra_nix_config: |
+            experimental-features = nix-command flakes auto-allocate-uids configurable-impure-env local-overlay-store
+            max-jobs = auto
+            max-silient-time = 1800
+            cores = 1
+            require-sigs = true
+            sandbox = false
+            sandbox-fallback = true
+            keep-failed = true
+            keep-going = true
+            show-trace = true
+            connect-timeout = 5
+            stalled-download-timeout = 300
+            download-attempts = 5
+            http-connections = 25
+            download-buffer-size = 500000000
+            trusted-substituters = https://cache.nixos.org/
+      - name: Install devenv
+        run: nix profile install github:cachix/devenv?ref=v2.2.1&dir=src/modules
+      - name: Run devenv shell
+        run: devenv shell --command "nix flake show"
