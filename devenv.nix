@@ -10,7 +10,6 @@
   packages = [
     pkgs.tflint
     pkgs.envsubst
-    pkgs.j2cli
     pkgs.hcl2json
     pkgs.zip
   ];
