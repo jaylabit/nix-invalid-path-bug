@@ -25,7 +25,7 @@ jobs:
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
-          install_url: https://releases.nixos.org/nix/nix-2.35.1/install
+          install_url: https://releases.nixos.org/nix/nix-2.34.8/install
           nix_path: nixpkgs=https://releases.nixos.org/nixos/26.05/nixos-26.05.5591.fd1462031fde/nixexprs.tar.xz
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           install_options: --no-daemon
@@ -48,15 +48,5 @@ jobs:
             trusted-substituters = https://cache.nixos.org/
       - name: Install devenv
         run: nix profile add "github:cachix/devenv?ref=v2.2.1" --accept-flake-config --option extra-substituters "https://devenv.cachix.org?trusted=true&priority=3"
-      - name: Run devenv with Nix HTTP trace
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          real_nix="$(command -v nix)"
-          mkdir -p "$RUNNER_TEMP/nix-debug"
-          printf '#!/usr/bin/env bash\nexec %q -vvvv "$@"\n' "$real_nix" \
-            > "$RUNNER_TEMP/nix-debug/nix"
-          chmod +x "$RUNNER_TEMP/nix-debug/nix"
-
-          PATH="$RUNNER_TEMP/nix-debug:$PATH" devenv shell -- terraform version
+      - name: Run devenv shell
+        run: devenv --verbose shell -- terraform version
