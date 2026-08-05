@@ -30,7 +30,7 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           install_options: --no-daemon
           extra_nix_config: |
-            experimental-features = nix-command flakes auto-allocate-uids configurable-impure-env local-overlay-store
+            experimental-features = nix-command flakes auto-allocate-uids configurable-impure-env
             max-jobs = auto
             max-silent-time = 1800
             cores = 1
