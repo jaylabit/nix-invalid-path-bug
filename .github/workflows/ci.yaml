@@ -25,8 +25,8 @@ jobs:
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
-          install_url: https://releases.nixos.org/nix/nix-2.35.1/install
-          nix_path: nixpkgs=https://releases.nixos.org/nixos/26.05/nixos-26.05.5591.fd1462031fde/nixexprs.tar.xz
+          install_url: https://releases.nixos.org/nix/nix-2.35.2/install
+          nix_path: nixpkgs=https://releases.nixos.org/nixos/26.05/nixos-26.05.8045.b18a4b905f8d/nixexprs.tar.xz
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           install_options: --no-daemon
           extra_nix_config: |
@@ -47,12 +47,8 @@ jobs:
             download-buffer-size = 500000000
             trusted-substituters = https://cache.nixos.org/
       - name: Install devenv
-        run: nix profile add "github:cachix/devenv?ref=v2.2.1" --accept-flake-config --option extra-substituters "https://devenv.cachix.org?trusted=true&priority=3"
+        run: nix profile add "github:cachix/devenv?ref=main" --accept-flake-config --option extra-substituters "https://devenv.cachix.org?trusted=true&priority=3"
       - name: Run devenv shell
         id: devenv_shell
-        continue-on-error: true
         run: devenv --verbose shell -- terraform version
-      - name: Sleep after devenv shell failure
-        if: steps.devenv_shell.outcome == 'failure'
-        run: sleep 7200
         
